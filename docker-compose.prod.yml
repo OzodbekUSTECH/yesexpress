@@ -42,15 +42,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    environment:
-      - DB_HOST=postgis
-      - DB_PORT=5432
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - DJANGO_SETTINGS_MODULE=tuktuk.settings
+    env_file:
+      - .env
     volumes:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
@@ -68,15 +61,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    environment:
-      - DB_HOST=postgis
-      - DB_PORT=5432
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - DJANGO_SETTINGS_MODULE=tuktuk.settings
+    env_file:
+      - .env
     volumes:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
@@ -94,15 +80,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    environment:
-      - DB_HOST=postgis
-      - DB_PORT=5432
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - DJANGO_SETTINGS_MODULE=tuktuk.settings
+    env_file:
+      - .env
     volumes:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
@@ -120,16 +99,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    environment:
-      - DB_HOST=postgis
-      - DB_PORT=5432
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - DJANGO_SETTINGS_MODULE=tuktuk.settings
-      - BOT_TOKEN=${BOT_TOKEN}
+    env_file:
+      - .env
     volumes:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
@@ -147,16 +118,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    environment:
-      - DB_HOST=postgis
-      - DB_PORT=5432
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - DJANGO_SETTINGS_MODULE=tuktuk.settings
-      - CELERY_BROKER_URL=redis://redis:6379/0
+    env_file:
+      - .env
     volumes:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
@@ -174,16 +137,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    environment:
-      - DB_HOST=postgis
-      - DB_PORT=5432
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - DJANGO_SETTINGS_MODULE=tuktuk.settings
-      - CELERY_BROKER_URL=redis://redis:6379/0
+    env_file:
+      - .env
     volumes:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
