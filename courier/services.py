@@ -3,6 +3,7 @@ from django_filters import rest_framework as filters
 from django.db.models import Q
 
 def get_delivery_settings():
+    return None
     return DeliverySettings.objects.first()
 
 class CourierFilter(filters.FilterSet):
