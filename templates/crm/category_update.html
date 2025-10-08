@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Добавить категорию
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Добавить категорию</h5>
+    </div>
+    <div class="card-body">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table class="table">
+
+                    <tr>
+                        <td><label for="id_name_ru">Название (RU)</label></td>
+                        <td><input required class="form-control" id="id_name_ru" value="{{ form.name_ru.value }}"
+                                   name="name_ru" placeholder="на русском"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_name_uz">Название (UZ)</label></td>
+                        <td><input required class="form-control" id="id_name_uz" value="{{ form.name_uz.value }}"
+                                   name="name_uz" placeholder="на узбекском"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_name_en">Название (EN)</label></td>
+                        <td><input required class="form-control" id="id_name_en" value="{{ form.name_en.value }}"
+                                   name="name_en" placeholder="на английском"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_position">Позиция</label></td>
+                        <td><input required class="form-control" id="id_position" value="{{ form.position.value }}"
+                                   name="position" type="number"></td>
+                        <input type="hidden" value="{{ user.get_institution.id }}" name="institution">
+                    </tr>
+                </table>
+            </div>
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </form>
+        {{ form.errors }}
+    </div>
+</div>
+{% endblock %}

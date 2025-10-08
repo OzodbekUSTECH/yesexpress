@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %} Редактировать {% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Редактировать продукт</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <form enctype="multipart/form-data" action="" method="post" id="id_form">
+                    {% csrf_token %}
+                    <tr>
+                        <td><label for="id_image">Картинка</label></td>
+                        <td><img src="{{ form.image.value.url }}" style="max-width:200px; max-height: 200px " alt=""><input class="form-control" type="file" name="image" accept="image/*" id="id_image"
+                                   data-bs-original-title="" title="" value="{{ form.image.value.url }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_name_ru"> Название (на русском) </label></td>
+                        <td><input required class="form-control" type="text" id="id_name_ru" name="name_ru"
+                                   value="{{ form.name_ru.value }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_name_uz"> Название (на узбекском) </label></td>
+                        <td><input required class="form-control" type="text" id="id_name_uz" name="name_uz"
+                                   value="{{ form.name_uz.value }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_name_en"> Название (на английском) </label></td>
+                        <td><input required class="form-control" type="text" id="id_name_en" name="name_en"
+                                   value="{{ form.name_en.value }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_description_ru"> Описание (на русском) </label></td>
+                        <td>
+                            <textarea required class="form-control" id="id_description_ru" name="description_ru">{{ form.description_ru.value }}
+                            </textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_description_uz"> Описание (на узбекском) </label></td>
+                        <td>
+                            <textarea required class="form-control" id="id_description_uz" name="description_uz">{{ form.description_uz.value }}
+                            </textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_description_en"> Описание (на английском) </label></td>
+                        <td>
+                            <textarea required class="form-control" id="id_description_en" name="description_en">{{ form.description_en.value }}
+                            </textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_status">Статус</label></td>
+                        <td>
+                            <select required class="form-control" name="status" id="id_status">
+                                {% for option in form.status %}
+                                    {{ option }}
+                                {% endfor %}
+                            </select>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_price"> Цена </label></td>
+                        <td><input required class="form-control" type="number" id="id_price" name="price"
+                                   value="{{ form.price.value }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_category">Категория</label></td>
+                        <td>
+                            <select required class="form-control" name="category" id="id_category">
+                            <option value="{{ product.category.id }}">{{ product.category.name_i18n }}</option>
+                            {% for category in user.get_institution.category_set.all %}
+                                <option value="{{ category.id }}">{{ category.name_i18n }}</option>
+                            {% endfor %}
+                            </select>
+
+                        </td>
+                    </tr>
+                </form>
+            </table>
+        </div>
+        <button class="btn btn-primary" type="submit" form="id_form"><i class="fa fa-save"></i> Сохранить</button>
+    </div>
+</div>
+
+{% endblock %}

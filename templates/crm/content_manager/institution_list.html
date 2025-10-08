@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Список заведений {% endblock %}
+
+{% block content %}
+    <div id="institutions">
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script type="module" src="{% static 'assets/js/reactComponents/config.js' %}"></script>
+<script type="module" src="{% static 'assets/js/reactComponents/contentManager/institutions/institutions.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %} Мое заведение {% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h5>Администрация </h5>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-xl">
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Владелец</td>
+                    <td>{{ institution.owner.first_name }}</td>
+                </tr>
+                <tr>
+                    <td>Администратор</td>
+                    <td>{{ institution.admin.first_name }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Администратор</h5>
+        <br>
+    </div>
+    <div class="card-body">
+        <p>Для вашего заведения вы можете назначить администратора, который будет иметь ограниченный доступ к
+            управлению</p>
+        {% if institution.admin %}
+        <div class="table-responsive">
+            <table class="table table xl">
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Имя</td>
+                    <td>{{ institution.admin.first_name }}</td>
+                </tr>
+                <tr>
+                    <td>Номер телефона</td>
+                    <td>{{ institution.admin.phone_number }}</td>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <a href="{% url 'insitution-admin-create' %}">Сменить администратора</a><br>
+        <form action="" method="post" id="id_form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete">
+            <a href="#" onclick="document.getElementById('id_form').submit()" class="font-danger">Удалить администратора</a>
+        </form>
+        {% else %}
+        <p>У этого заведения нет администратора</p>
+        <a href="{% url 'insitution-admin-create' %}" class="font-primary">Назначить администратора</a>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,2 @@
+class ReceiptDataSigningError(Exception):
+    pass

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %} Добавить администратора {% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Добавить администратора</h5>
+    </div>
+    <div class="card-body">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_phone_number">Номер телефона*</label></td>
+                        <td><input id="id_phone_number" required name="phone_number" type="text" class="form-control"
+                                   maxlength="13" minlength="13" placeholder="+998XXXXXXXXX"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_first_name">Имя*</label></td>
+                        <td><input id="id_first_name" required name="first_name" type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_last_name">Фамилия</label></td>
+                        <td><input id="id_last_name" name="last_name" type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_password1">Пароль*</label></td>
+                        <td><input id="id_password1" required name="password1" type="password" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_password2">Подтвердить пароль*</label></td>
+                        <td><input id="id_password2" required name="password2" type="password" class="form-control"></td>
+                    </tr>
+                </table>
+            </div>
+            <br>
+            <button class="btn btn-primary">Сохранить</button>
+            {% if form.errors %}
+            <p class="font-danger">Произошла ошибка</p>
+            {{ form.errors }}
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

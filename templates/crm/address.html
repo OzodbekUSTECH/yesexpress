@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %} Изменить адрес {% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h5>Изменить адрес</h5>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <form id="id_form" action="" method="post">
+                {% csrf_token %}
+                <table class="table">
+                    <tr>
+                        <td><label for="id_region">Регион</label></td>
+                        <td>{{ address.region.name_i18n }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_street">Улица</label></td>
+                        <td><input class="form-control" id="id_street" name="street" value="{{ form.street.value }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_reference_point">Ориентир</label></td>
+                        <td><input class="form-control" id="id_reference_point" name="reference_point"
+                                value="{{ form.reference_point.value }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_location">Локация</label></td>
+                        <td><div id='map' style='width: 400px; height: 300px;'></div></td>
+                    </tr>
+                </table>
+                <input id="id_longitude" type="hidden" value="{{ form.longitude.value }}" name="longitude">
+                <input id="id_latitude" type="hidden" value="{{ form.latitude.value }}" name="latitude">
+            </form>
+            
+        </div>
+        
+        <button type="submit" form="id_form" class="btn btn-primary">Сохранить</button>
+            {% if form.errors %}
+            <p class="font-danger">Произошла ошибка</p>
+            {{ form.errors }}
+            {% endif %}
+        <script>
+
+            let long = '{{ form.longitude.value }}'.replace(',', '.')
+            let lat = '{{ form.latitude.value }}'.replace(',', '.')
+
+            mapboxgl.accessToken = 'pk.eyJ1IjoiZGFsZXJ6YWZhcm92aWNoIiwiYSI6ImNsMjR0aWg5YjAwbnYzYm11cmxpbnFlYWcifQ.O_feU3l-fa8V8LHcmYIqgg';
+            var map = new mapboxgl.Map({
+                container: 'map',
+                center: [long, lat],
+                zoom: 15,
+                style: 'mapbox://styles/mapbox/streets-v11'
+            });
+
+            let marker = new mapboxgl.Marker({
+                draggable: true,
+            }).setLngLat([long, lat]).addTo(map)
+
+            function onDragEnd() {
+                const lngLat = marker.getLngLat();
+                console.log(lngLat.lng)
+                console.log(lngLat.lat)
+                document.getElementById('id_longitude').setAttribute('value', lngLat.lng)
+                document.getElementById('id_latitude').setAttribute('value', lngLat.lat)
+            }
+
+            marker.on('dragend', onDragEnd)
+        </script>
+    </div>
+</div>
+
+{% endblock %}

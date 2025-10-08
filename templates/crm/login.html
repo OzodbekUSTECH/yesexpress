@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %} Войти {% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header pb-0">
+        <h5>Войти в аккаунт</h5><span>При потере данных от аккаунта следует обратиться к администратору системы</span>
+        <hr>
+    </div>
+    <div class="card-body">
+        <form class="theme-form" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input class="form-control" id="inputNumber" type="text" placeholder="Номер телефона" name="phone_number" value="{{ username }}">
+            </div>
+            <div class="mb-3">
+                <input class="form-control" id="inputPassword" type="password" placeholder="Пароль" name="password">
+            </div>
+<!--            <div class="checkbox p-0">-->
+<!--                <input id="dafault-checkbox" type="checkbox">-->
+<!--                <label class="mb-0" for="dafault-checkbox">Remember my preference</label>-->
+<!--            </div>-->
+            <p class="font-danger">{{ login_error }}</p>
+            <button class="btn btn-primary" type="submit">Войти</button>
+        </form>
+
+    </div>
+</div>
+
+
+{% endblock %}

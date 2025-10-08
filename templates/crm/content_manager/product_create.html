@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Категории продуктов {% endblock %}
+
+{% block content %}
+    <div id="createProduct">
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script type="module" src="{% static 'assets/js/reactComponents/config.js' %}"></script>
+<script type="module" src="{% static 'assets/js/reactComponents/contentManager/products/productCreate.js' %}"></script>
+{% endblock %}

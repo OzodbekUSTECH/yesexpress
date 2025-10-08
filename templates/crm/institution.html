@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %} Мое заведение {% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h5>Информация <a href="{% url 'institution-update-admin' %}"><i class="fa fa-pencil"></i></a></h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-xl">
+                <tr>
+                    <td></td>
+                    <td></td>
+
+                </tr>
+                <tr>
+                    <td>Название</td>
+                    <td>{{ institution.name }}</td>
+
+                </tr>
+                <tr>
+                    <td>Тип заведения</td>
+                    <td>{{ institution.get_type_display }}</td>
+                </tr>
+                <tr>
+                    <td>Категория</td>
+                    <td>{{ institution.category.title_i18n }}</td>
+                </tr>
+                <tr>
+                    <td>Контактный номер</td>
+                    <td>{{ institution.phone_number }}</td>
+                </tr>
+                <tr>
+                    <td>График работы</td>
+                    <td>{{ institution.start_time }} - {{ institution.end_time }}</td>
+                </tr>
+                <tr>
+                    <td>Адрес</td>
+                    <td>{{ institution.address }} <br> <a href="{% url 'change-institution-address' %}">Изменить</a> </td>
+                </tr>
+                {% if institution.delivery_by_own %}
+                    <tr>
+                        <td>Настройки доставки</td>
+                        <td><a href="{% url 'delivery-settings' %}">Посмотреть</a> </td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        Заведение сейчас
+        <form method="post" action="">
+            {% csrf_token %}
+            {% if institution.is_open %}
+            <p class="f-28 font-primary">
+                открыто
+            </p>
+            <button type="submit" class="btn btn-danger">Закрыть</button>
+            {% else %}
+            <p class="f-28 font-danger">
+                закрыто
+            </p>
+            <button type="submit" class="btn btn-primary">Открыть</button>
+            {% endif %}
+        </form>
+        <hr>
+        По графику:
+        {% if institution.is_open_by_schedule %}
+        <p class="f-28 font-primary">
+                открыто
+        </p>
+        {% else %}
+        <p class="f-28 font-primary">
+                закрыто
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Администрация <a href="{% url 'institution-management'%}"><i class="fa fa-pencil"></i></a></h5>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-xl">
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Владелец</td>
+                    <td>{{ institution.owner.first_name }}</td>
+                </tr>
+                <tr>
+                    <td>Администратор</td>
+                    <td>{{ institution.admin.first_name }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %} Продукты {% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Продукты <a href="{% url 'product-create-admin' %}"><i class="fa fa-plus-square"></i></a>
+                        </h5>
+                        <hr>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="display" id="basic-1">
+                                <thead>
+                                <tr>
+                                    <th>Название</th>
+                                    <th>Категория</th>
+                                    <th>Цена</th>
+                                    <th>Управление</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for product in product_list %}
+                                    <tr>
+                                        <td>{{ product.name }}
+                                        </td>
+                                        <td>{{ product.category }}</td>
+                                        <td>{{ product.price }}</td>
+                                        <td><label style="top: 10px" class="switch">
+                                            <input type="checkbox" id="status_checkbox_{{ product.id }}"
+                                                   onclick="changeProductStatus({{ product.id }})"
+                                                    {% if product.status == 'active' %} checked {% endif %}><span id="span_{{ product.id }}"
+                                                class="switch-state"></span>
+                                        </label> &nbsp;
+                                            <a href="{% url 'product-detail-admin' product.id %}"
+                                               title="Редактировать"> <i data-feather="edit-2"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeProductStatus(product_id) {
+            const checkbox = document.getElementById(`status_checkbox_${product_id}`)
+            const span = document.getElementById(`span_${product_id}`)
+            checkbox.setAttribute('disabled', '')
+            span.classList.add('bg-info')
+            let status;
+            if (!checkbox.checked){
+                status = 'inactive'
+            } else {
+                status = 'active'
+            }
+            const data = {
+                'status': status
+            }
+            fetch(`{{ http_url }}/api/products/${product_id}/`,
+                {
+                    'method': 'PATCH',
+                    'body': JSON.stringify(data),
+                    'headers': { "X-CSRFToken": '{{csrf_token}}',
+                                "Content-Type": 'application/json'},
+                })
+                .catch((error) => {
+                    alert(error)
+                })
+                .then((response) => {
+                    if (!response.ok){
+                        throw new Error('Произошла ошибка')
+                    }
+                    return response.json();
+                })
+                .catch((error) => {
+                    alert(error)
+                })
+                .then((data) => {
+                    checkbox.removeAttribute('disabled')
+                    span.classList.remove('bg-info')
+                });
+
+        }
+    </script>
+
+{% endblock %}

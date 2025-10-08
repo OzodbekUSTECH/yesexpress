@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Заказ {% endblock %}
+
+{% block content %}
+
+<div id="orderDetail">
+    <div class="card">
+        <div class="card-header">
+            <h5>Информация</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-xl">
+                    <tr>
+                        <td>
+                        <td></td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>№ заказа</td>
+                        <td>{{ order.order.id }}</td>
+
+                    </tr>
+                    <tr>
+                        <td>Номер заказчика</td>
+                        <td>{{ order.order.customer.phone_number }}</td>
+
+                    </tr>
+                    <tr>
+                        <td>Создан</td>
+                        <td>{{ order.created_at }}</td>
+                    </tr>
+                    <tr>
+                        <td>Обновлен</td>
+                        <td>{{ order.updated_at }}</td>
+                    </tr>
+                    <tr>
+                        <td>Способ оплаты</td>
+                        <td>{{ order.order.get_payment_method_display }}</td>
+                    </tr>
+                    <tr>
+                        <td>Оплачено</td>
+                        <td>{% if order.order.is_paid %}Да{% else %}Нет{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Сумма продуктов</td>
+                        <td>{{ order.products_sum }} сум</td>
+                    </tr>
+                    <tr>
+                        <td>Сумма доставки</td>
+                        <td>{{ order.delivering_sum }} сум</td>
+                    </tr>
+                    <tr>
+                        <td>Общая сумма</td>
+                        <td>{{ order.total_sum }} сум</td>
+                    </tr>
+                    {% if order.order.courier %}
+                        <tr>
+                            <td>Курьер</td>
+                            <td>{{ order.order.courier }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if user.type == 'operator' %}
+                        <tr>
+                            <td>Заведение</td>
+                            <td>{{ order.institution }}</td>
+                        </tr>
+                        <tr>
+                            <td>Номер телефона заведения</td>
+                            <td>{{ order.institution.phone_number }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td>Время приготовления</td>
+                        <td>{% if order.order.preparing_time %}{{ order.order.preparing_time }}{% endif %}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Список продуктов</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Количество</th>
+                        <th>Цена</th>
+                        <th>Дополнения</th>
+                        <th>Стоимость</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.product.name_i18n }}</td>
+                            <td>{{ item.count }}</td>
+                            <td>{{ item.product.price }} сум</td>
+                            <td>{% for option in item.options.all %}
+                                {{ option.title }} ({{ option.adding_price }} сум)<br>
+                            {% endfor %}
+                            </td>
+                            <td>{{ item.total_sum }}</td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Статус заказа</h5>
+        </div>
+        <div class="card-body">
+            Текущий статус заказа: <p class="f-28"> {{ order.order.get_status_display }} </p>
+            {% if user.type == 'operator' %}
+                <form action="" method="post">
+                    <div>
+                        {% csrf_token %}
+                        <select class="form-control" name="status" id="status">
+                            <option value="">----------</option>
+                            <option value="created">Создан</option>
+                            <option value="accepted">Принят и готовится</option>
+                            <option value="shipped">В пути</option>
+                            <option value="closed">Завершен</option>
+                        </select>
+                        <br>
+                        <button class="btn btn-primary">Подтвердить</button>
+                    </div>
+                </form>
+            {% else %}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% if order.order.status == 'created' %}
+                        <input type="hidden" value="accepted" name="status">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Принять</button>
+                    {% elif order.order.status == 'accepted' %}
+                        <input type="hidden" value="shipped" name="status">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>В пути</button>
+                    {% endif %}
+                    {% if user.get_institution.delivery_by_own %}
+                        {% if order.order.status == 'shipped' %}
+                            <input type="hidden" value="closed" name="status">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Доставлен</button>
+                        {% endif %}
+                    {% endif %}
+                </form>
+                <hr/>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% if order.order.status == 'created' %}
+                        <input type="hidden" value="rejected" name="status">
+                        <button type="submit" class="btn btn-danger">Отменить</button>
+                    {% endif %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+    <script type="module" src="{% static 'assets/js/reactComponents/config.js' %}"></script>
+    <script type="module" src="{% static 'assets/js/reactComponents/newOrederDetailPage.js' %}"></script>
+    
+{% endblock %}
+

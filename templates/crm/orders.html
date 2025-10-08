@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %} История заказов {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>История заказов</h5>
+                    <hr>
+                    <div class="col">
+                        <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml justify-content-around">
+                            <form action="" method="get">
+                                <p class="f-w-600">Фильтр по статусу</p>
+                                 <div class="radio radio-primary">
+                                    <input id="radioinline0" type="radio" name="all" value="">
+                                    <label class="mb-0" for="radioinline0">Все<span class="digits"> </span></label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <input id="radioinline1" type="radio" name="status" value="created">
+                                    <label class="mb-0" for="radioinline1">Не принят<span class="digits"> </span></label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <input id="radioinline9" type="radio" name="status" value="accepted">
+                                    <label class="mb-0" for="radioinline9">Принят заведением<span class="digits"> </span></label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <input id="radioinline2" type="radio" name="status" value="shipped">
+                                    <label class="mb-0" for="radioinline2">В пути<span class="digits"> </span></label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <input id="radioinline3" type="radio" name="status" value="closed">
+                                    <label class="mb-0" for="radioinline3">Закрыт<span class="digits"> </span></label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <input id="radioinline4" type="radio" name="status" value="rejected">
+                                    <label class="mb-0" for="radioinline4">Отменен<span class="digits"> </span></label>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Фильтр </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table class="display" id="basic-1">
+                            <thead>
+                            <tr>
+                                <th>Упр.</th>
+                                <th>Номер</th>
+                                <th>Телефон</th>
+                                <th>Сумма продуктов</th>
+                                <th>Сумма доставки</th>
+                                <th>Статус</th>
+                                <th>Дата и время</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td style="width: 25px"><a href="{% url 'order-detail-admin' order.id %}" title="Редактировать"> <i class="fa fa-pencil"></i></a></td>
+                                <td>{{ order.order.id }}</td>
+                                <td>{{ order.order.customer.phone_number }}</td>
+                                <td>{{ order.products_sum }}</td>
+                                <td>{{ order.delivering_sum }}</td>
+                                <td>{{ order.order.get_status_display }}</td>
+                                <td>{{ order.created_at }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

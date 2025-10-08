@@ -1,0 +1,92 @@
+{% extends "admin/app_index.html" %}
+
+
+{% block content %}
+
+    <div id="content-main">
+        <form method="get">
+            {{ form.as_p }}
+            <input value="Фильтр" type="submit">
+        </form>
+        <br>
+        <p>Количество: <b>{{ count }}</b></p>
+        <div class="results">
+            <table id="result_list">
+                <thead>
+                <tr>
+                    <th scope="col" class="sortable column-id">
+                        <div class="text">ID заказа</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">Статус</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">Пользователь</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">Заведение</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">Сумма продуктов</div>
+                    </th>
+
+                    <th scope="col">
+                        <div class="text">Комиссия</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">Сумма без учета комиссии</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">Сумма доставки</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">Сумма скидки</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">К оплате</div>
+                    </th>
+                    <th>
+                        <div class="text">Метод оплаты</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">Дата</div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order in order_list %}
+                    <tr>
+                        <td>{{ order.order.id }}</td>
+                        <td>{{ order.order.get_status_display }}</td>
+                        <td>{{ order.order.customer.phone_number }}</td>
+                        <td>{{ order.institution }}</td>
+                        <td>{{ order.products_sum }}</td>
+                        <td>{{ order.commission }}</td>
+                        <td>{{ order.without_commission }}
+                        <td>{{ order.delivering_sum }}</td>
+                        <td>{{ order.order.discount_sum }}</td>
+                        <td>{{ order.order.total_sum }}</td>
+                        <td>{{ order.order.payment_method }}</td>
+                        <td>{{ order.created_at|date:'d.m.Y H:i' }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td><b>Итого</b></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><b>{{ products_sum }}</b></td>
+                    <td><b>{{ commission_sum }}</b></td>
+                    <td><b>{{ without_commission_sum }}</b></td>
+                    <td><b>{{ delivering_sum }}</b></td>
+                    <td></td>
+                    <td>{{ total_sum }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

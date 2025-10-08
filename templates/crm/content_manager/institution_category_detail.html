@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Категории заведений {% endblock %}
+
+{% block content %}
+    <div id="categoryDetail">
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script type="module" src="{% static 'assets/js/reactComponents/config.js' %}"></script>
+<script type="module" src="{% static 'assets/js/reactComponents/contentManager/institutionsCategories/categoryDetail.js' %}"></script>
+
+{% endblock %}

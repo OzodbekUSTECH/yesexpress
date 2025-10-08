@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Новые заказы {% endblock %}
+
+{% block content %}
+    <div id="newOrders">
+        <div class="card-header">
+            <h5>Новые заказы</h5>
+
+        </div>
+        <div class="card-body">
+{#            <div class="media">#}
+{#                <label class="col-form-label m-r-10">Звук</label>#}
+{#                <div class="media-body text-start">#}
+{#                    <label class="switch">#}
+{#                        <input type="checkbox" id="notification_sound"><span class="switch-state"></span>#}
+{#                    </label>#}
+{#                </div>#}
+{#            </div>#}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Упр.</th>
+                        <th>Номер телефона</th>
+                        <th>Сумма продуктов</th>
+                        <th>Сумма доставки</th>
+                        <th>Создан</th>
+                        <th>№ заказа</th>
+                    </tr>
+                    </thead>
+                    <tbody id="orders">
+                    {% for order in orders %}
+                        <tr>
+                            <td><a href="{% url 'order-detail-admin' order.id %}"><i class="fa fa-pencil"></i></a></td>
+                            <td>{{ order.order.customer.phone_number }}</td>
+                            <td>{{ order.products_sum }} сум</td>
+                            <td>{{ order.delivering_sum }} сум</td>
+                            <td>{{ order.order.created_at }}</td>
+                            <td>{{ order.order.id }}</td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div> -->
+    </div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script type="module" src="{% static 'assets/js/reactComponents/config.js' %}"></script>
+<script type="module" src="{% static 'assets/js/reactComponents/newOrdersPage.js' %}"></script>
+
+    <!-- <script>
+
+        let ws = null;
+
+        function connect_socket() {
+            ws = new WebSocket('{{ websocket_url }}ws/institution/{{ user.get_institution.id }}/')
+            ws.addEventListener("close", connect_socket); // <- rise from your grave!
+            heartbeat();
+        }
+
+        function heartbeat() {
+            if (!ws) return;
+            if (ws.readyState !== 1) return;
+            ws.send("ping");
+            setTimeout(heartbeat, 5000);
+        }
+
+        connect_socket();
+
+        const notification_sound = new Audio("{% static 'assets/audio/notification_sound.mp3' %}")
+
+        function changeTime(order_id, value) {
+            document.getElementById(`order_${order_id}`).innerHTML = value + ' минут(ы) назад'
+            setTimeout(changeTime, 60000, order_id, value + 1)
+        }
+
+        ws.addEventListener('message', (event) => {
+            let data = JSON.parse(event.data)
+            let table = document.getElementById('orders')
+            table.innerHTML = `
+                <tr>
+                <td><a href="/orders/${data.group_id}"><i class="fa fa-pencil"></i></a></td>
+                <td>${data.phone_number}</td>
+                <td>${data.products_sum} сум</td>
+                <td>${data.delivering_sum} сум</td>
+                <td id="order_${data.order_id}">${data.created_at}</td>
+                <td>${data.order_id}</td>
+            </tr>` + table.innerHTML
+            setTimeout(changeTime, 60000, data.order_id, 1)
+
+            notification_sound.play()
+
+        })
+    </script> -->
+
+{% endblock %}

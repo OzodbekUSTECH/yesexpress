@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %} Изменить адрес {% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h5>Изменить настройки доставки</h5>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <form id="id_form" action="" method="post">
+                {% csrf_token %}
+                <table class="table">
+                    <tr>
+                        <td><label for="id_min_distance">Минимальная дистанция доставки</label></td>
+                        <td><input class="form-control" id="id_min_distance" name="min_distance" value="{{ form.min_distance.value }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="min_delivery_price">Минимальная цена доставки</label></td>
+                        <td><input class="form-control" id="min_delivery_price" name="min_delivery_price"
+                                value="{{ form.min_delivery_price.value }}">
+                        </td>
+                    </tr>
+                     <tr>
+                        <td><label for="price_per_km">Цена доставки за 1 километр</label></td>
+                        <td><input class="form-control" id="price_per_km" name="price_per_km"
+                                value="{{ form.price_per_km.value }}">
+                        </td>
+                    </tr>
+                </table>
+                <input id="id_longitude" type="hidden" value="{{ form.longitude.value }}" name="longitude">
+                <input id="id_latitude" type="hidden" value="{{ form.latitude.value }}" name="latitude">
+            </form>
+            
+        </div>
+        
+        <button type="submit" form="id_form" class="btn btn-primary">Сохранить</button>
+            {% if form.errors %}
+            <p class="font-danger">Произошла ошибка</p>
+            {{ form.errors }}
+            {% endif %}
+        <script>
+        </script>
+    </div>
+</div>
+
+{% endblock %}

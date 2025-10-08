@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+
+{% block title %} Продукт {% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h5>Информация <a href="{% url 'product-update-admin' product.id %}"><i class="fa fa-pencil"></i></a></h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-xl">
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Название</td>
+                        <td><b>{{ product.name }}</b></td>
+                    </tr>
+                    <tr>
+                        <td>Категория</td>
+                        <td>{{ product.category }}</td>
+                    </tr>
+                    <tr>
+                        <td>Статус</td>
+                        <td>{{ product.get_status_display }}</td>
+                    </tr>
+                    <tr>
+                        <td>Описание на русском</td>
+                        <td>{{ product.description_ru }}</td>
+                    </tr>
+                    <tr>
+                        <td>Описание на узбекском</td>
+                        <td>{{ product.description_uz }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Дополнения <a href="" data-bs-toggle="modal" data-original-title="test"
+                              data-bs-target="#optionAddModal"><i
+                    class="fa fa-plus-square"></i></a></h5>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Управление</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for option in product.options.all %}
+                        <tr>
+                            <td>{{ option.title_ru }}</td>
+                            <td>
+                                <a href="" data-bs-toggle="modal" data-original-title="test"
+                                   data-bs-target   ="#optionDeleteModal_{{ option.id }}" title="Удалить дополнение"><i
+                                        class="fa fa-trash-o"></i></a>&nbsp;
+                                <a href="{% url 'option-update-admin' option.id %}" title="Посмотреть дополнение"><i
+                                        class="fa fa-pencil"></i></a>
+                                <div class="modal fade" id="optionDeleteModal_{{ option.id }}" tabindex="-1"
+                                     role="dialog"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Удалить</h5>
+                                                <button class="btn-close" type="button" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form class="theme-form" action="{% url 'option-admin' %}"
+                                                      method="post">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="action" value="delete">
+                                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                                    <input type="hidden" name="option_id" value="{{ option.id }}">
+                                                    <p>Вы точно хотите удалить дополнение {{ option.title_ru }}?</p>
+                                                    <button type="submit" class="btn btn-primary"> Удалить</button>
+                                                    <button class="btn btn-danger" data-bs-dismiss="modal"
+                                                            aria-label="Close">
+                                                        Отмена
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="optionViewModal_{{ option.id }}" tabindex="-1" role="dialog"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ option.title_i18n }}</h5>
+                                                <button class="btn-close" type="button" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul>
+                                                    {% for item in option.items.all %}
+                                                        <li>{{ item.title_i18n }}</li>
+                                                    {% endfor %}
+                                                    <li></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--option creation form-->
+    <div class="modal fade" id="optionAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Добавить</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="theme-form" action="{% url 'option-admin' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="create">
+                        <input id="indexes" type="hidden" name="indexes" value="1">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <div class="mb-3"><input class="form-control" required type="text" name="title_ru"
+                                                 placeholder="Название на русском">
+                        </div>
+                        <div class="mb-3"><input class="form-control" required type="text" name="title_uz"
+                                                 placeholder="Название на узбекском"></div>
+                        <div class="mb-3"><input class="form-control" required type="text" name="title_en"
+                                                 placeholder="Название на английском"></div>
+                        <div class="checkbox"><input type="checkbox" name="is_required" id="id_is_required"><label
+                                for="id_is_required">Является обязательным</label>
+                        </div>
+                        <hr>
+                        <div id="optionItemsWrapper">
+                            <h6>Элементы дополнения</h6>
+                            <div id="optionItems">
+                                <div class="row row-cols-sm-5 theme-form mt-3 form-bottom" id="item_1">
+                                    <div class="mb-3 d-flex">
+                                        <input class="form-control" required type="text" name="title_ru_1"
+                                               placeholder="На русском">
+                                    </div>
+                                    <div class="mb-3 d-flex">
+                                        <input class="form-control" required type="text" name="title_uz_1"
+                                               placeholder="На узбекском">
+                                    </div>
+                                    <div class="mb-3 d-flex">
+                                        <input class="form-control" required type="text" name="title_en_1"
+                                               placeholder="На английском">
+                                    </div>
+                                    <div class="mb-3 d-flex">
+                                        <input class="form-control" required type="number" name="adding_price_1"
+                                               placeholder="Цена">
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="btn btn-primary" onclick="addOptionItem()">Добавить</a>
+                        </div>
+                        <hr>
+                        <button type="submit" class="btn btn-primary"> Сохранить</button>
+                        <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"> Отмена</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% block extra_js %}
+        <script>
+            let n = 2
+
+            function addOptionItem() {
+
+                newOptionFieldSet = document.createElement('div')
+                newOptionFieldSet.innerHTML = `
+        <div class="row row-cols-sm-5 theme-form mt-3 form-bottom" id="item_${n}">
+            <div class="mb-3 d-flex">
+                <input class="form-control" required type="text" name="title_ru_${n}" placeholder="На русском">
+            </div>
+            <div class="mb-3 d-flex">
+                <input class="form-control" required type="text" name="title_uz_${n}"
+                                           placeholder="На узбекском">
+            </div>
+            <div class="mb-3 d-flex">
+                <input class="form-control" required type="text" name="title_en_${n}"
+                                           placeholder="На английском">
+            </div>
+            <div class="mb-3 d-flex">
+                 <input class="form-control" required type="number" name="adding_price_${n}" placeholder="Цена">
+            </div>
+            <div class="mb-3 d-flex">
+                 <a class="btn btn-danger" onclick=removeOptionItem(${n})><i class='fa fa-trash'></i></a> 
+            </div>
+        </div>
+        `
+
+                document.querySelector('#optionItems').appendChild(newOptionFieldSet)
+                document.querySelector('#indexes').setAttribute('value', document.querySelector('#indexes').getAttribute('value') + ` ${n}`)
+                n += 1
+            }
+
+            function removeOptionItem(n) {
+                document.querySelector(`#item_${n}`).remove()
+
+            }
+
+
+        </script>
+    {% endblock %}
+
+{% endblock %}

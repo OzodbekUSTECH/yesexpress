@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Нет доступа {% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <p>У вас нет доступа к этой странице</p>
+        <p><a href="{% url 'login' %}">Войти в другой аккаунт </a></p>
+    </div>
+</div>
+{% endblock %}

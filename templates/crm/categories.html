@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Категории
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h5>Категории <a href="{% url 'category-create-admin' %}"><i class="fa fa-plus-square"></i></a></h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Управление</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for category in category_set %}
+                        <tr>
+                            <td>{{ category.name_ru }}</td>
+                            <td>
+                                <label style="top: 10px" class="switch">
+                                    <input type="checkbox" id="status_checkbox_{{ category.id }}"
+                                           onclick="changeCategoryStatus({{ category.id }})"
+                                            {% if category.is_active %} checked {% endif %}><span
+                                        id="span_{{ category.id }}"
+                                        class="switch-state"></span>
+                                </label> &nbsp;
+                                <a href="{% url 'category-update-admin' category.id %}"
+                                   title="Редактировать"> <i data-feather="edit-2"></i></a> &nbsp;
+                                <a href="" data-bs-toggle="modal" data-original-title="test"
+                                   data-bs-target="#categoryDeleteModal_{{ category.id }}" title="Удалить категорию"><i data-feather="trash-2"></i></a>
+                                <div class="modal fade" id="categoryDeleteModal_{{ category.id }}" tabindex="-1"
+                                     role="dialog"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Удалить</h5>
+                                                <button class="btn-close" type="button" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form class="theme-form" action="{% url 'category-delete-admin' %}"
+                                                      method="post">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="category_id" value="{{ category.id }}">
+                                                    <p>Вы точно хотите удалить категорию {{ category.name_ru }}?</p>
+                                                    <button type="submit" class="btn btn-primary"> Удалить</button>
+                                                    <button class="btn btn-danger" data-bs-dismiss="modal"
+                                                            aria-label="Close">
+                                                        Отмена
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeCategoryStatus(category_id) {
+            const checkbox = document.getElementById(`status_checkbox_${category_id}`)
+            const span = document.getElementById(`span_${category_id}`)
+            checkbox.setAttribute('disabled', '')
+            span.classList.add('bg-info')
+            let is_active = checkbox.checked
+            const data = {
+                'is_active': is_active
+            }
+            fetch(`{{ http_url }}/api/product-categories/${category_id}/`,
+                {
+                    'method': 'PATCH',
+                    'body': JSON.stringify(data),
+                    'headers': {
+                        "X-CSRFToken": '{{csrf_token}}',
+                        "Content-Type": 'application/json'
+                    },
+                })
+                .catch((error) => {
+                    alert(error)
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Произошла ошибка')
+                    }
+                    return response.json();
+                })
+                .catch((error) => {
+                    alert(error)
+                })
+                .then((data) => {
+                    checkbox.removeAttribute('disabled')
+                    span.classList.remove('bg-info')
+                });
+
+        }
+    </script>
+{% endblock %}

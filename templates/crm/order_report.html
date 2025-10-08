@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %} Отчет по заказам {% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h5>Отчет по заказам</h5>
+            <div>
+                <form action="" method="get" class="row row-cols-sm-3 theme-form mt-3 form-bottom">
+                    <div class="mb3 d-flex">
+                        <label class="col-form-label pe-2" for="id_date_range_after">От</label>
+                        {{ form.date_range_after }}
+                    </div>
+                    <div class="mb3 d-flex">
+                        <label class="col-form-label pe-2" for="id_date_range_before">До</label>
+                        {{ form.date_range_before }}
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Фильтр</button>
+                </form>
+            </div>
+        </div>
+        <div class="card-body">
+            <p><b>Количество: {{ count }}</b></p>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>№ заказа</th>
+                        <th>Дата/время</th>
+                        <th>Пользователь</th>
+                        <th>Сумма продуктов</th>
+                        <th>Комиссия</th>
+                        <th>Итого</th>
+                        <th>Способ оплаты</th>
+                    </tr>
+                    </thead>
+                    <tbody id="orders">
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.order.id }}</td>
+                            <td>{{ order.order.created_at }}</td>
+                            <td>{{ order.order.customer.phone_number }}</td>
+                            <td>{{ order.products_sum }} сум</td>
+                            <td>{{ order.commission }} сум</td>
+                            <td>{{ order.without_commission }} сум</td>
+                            <td>{{ order.order.get_payment_method_display }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td><b>Итого</b></td>
+                        <td></td>
+                        <td></td>
+                        <td><b>{{ products_sum }} сум</b></td>
+                        <td><b>{{ commission_sum }} сум</b></td>
+                        <td><b>{{ total_sum }} сум</b></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

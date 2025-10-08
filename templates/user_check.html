@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YesExpress User Checker</title>
+</head>
+<body>
+<form action="" method="get">
+    <input type="hidden" name="message" value="not-found">
+    <div>
+        <label for="id_phone_number"></label>
+        <input type="text" id="id_phone_number" required minlength="9" maxlength="9">
+    </div>
+    <button>Check</button>
+</form>
+<p id="user_deleted" style="display:none">
+    User is deleted
+</p>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let params = new URLSearchParams(window.location.search)
+        if (params.get('message') === 'not-found') {
+            document.getElementById('user_deleted').style = ''
+        }
+    })
+</script>
+</body>
+</html>

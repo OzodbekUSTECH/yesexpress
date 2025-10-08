@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Главная
+{% endblock %}
+
+
+{% block content %}
+<div class="card">
+    <div class="card-header"><h5>Добро пожаловать на административную систему
+        <span class="font-primary">{{ user.get_institution }}</span></h5></div>
+    <div class="card-body">
+        <p>Система позволяет полностью управлять заведением в рамках системы TUK TUK Express, начиная с <a href="{% url 'products' %}">продуктов</a> и
+            заканчивая
+            распределением <a href="{% url 'orders-admin' %}">заказов</a></p></div>
+</div>
+
+{% endblock %}

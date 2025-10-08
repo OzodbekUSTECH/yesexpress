@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %} Редактировать {% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Редактировать заведение</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <form enctype="multipart/form-data" action="" method="post" id="id_form">
+                    {% csrf_token %}
+                    <tr>
+                        <td><label for="id_name">Название</label></td>
+                        <td><input class="form-control" id="id_name" disabled type="text"
+                                   value="{{ institution.name }}"></td>
+                    </tr>
+
+                    <tr>
+                        <td><label for="id_logo">{{ form.logo.label }}</label></td>
+                        <td><img src="{% if form.logo.value %}{{ form.logo.value.url }}{% endif %}"
+                                 style="max-width:100px; max-height: 100px " alt=""><input class="form-control"
+                                                                                           type="file" name="logo"
+                                                                                           accept="image/*" id="id_logo"
+                                                                                           data-bs-original-title=""
+                                                                                           title=""
+                                                                                           value="{% if form.logo.value %}{{ form.logo.value.url }}{% endif %}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_image">{{ form.image.label }}</label></td>
+                        <td><img src="{% if form.image.value %}{{ form.image.value.url }}{% endif %}"
+                                 style="max-width:200px; max-height: 200px " alt=""><input class="form-control"
+                                                                                           type="file" name="image"
+                                                                                           accept="image/*"
+                                                                                           id="id_image"
+                                                                                           data-bs-original-title=""
+                                                                                           title=""
+                                                                                           value="{% if form.image.value %}{{ form.image.value.url }}{% endif %}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_description_ru">Описание (на рус.)</label></td>
+                        <td>
+                            <textarea class="form-control" name="description_ru" id="id_description_ru">{{ form.description_ru.value }}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_description_uz">Описание (на узб.)</label></td>
+                        <td>
+                            <textarea class="form-control" name="description_uz" id="id_description_uz">{{ form.description_uz.value }}</textarea>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td><label for="id_description_en">Описание (на англ.)</label></td>
+                        <td>
+                            <textarea class="form-control" name="description_en" id="id_description_en">{{ form.description_en.value }}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_phone_number">{{ form.phone_number.label }}</label></td>
+                        <td><input id="id_phone_number" class="form-control" type="text"
+                                   value="{{ form.phone_number.value }}" name="phone_number"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_start_time">{{ form.start_time.label }}</label></td>
+                        <td><input id="id_start_time" type="time" class="form-control" name='start_time'
+                                   value="{% if form.start_time.value.hour < 10 %}0{% endif %}{{ form.start_time.value|time:'G:i:s' }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_end_time">{{ form.end_time.label }}</label></td>
+                        <td><input id="id_end_time" type="time" class="form-control" name='end_time'
+                                   value="{{ form.end_time.value|time:'G:i:s' }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_min_delivery_time">{{ form.min_delivery_time.label }}</label></td>
+                        <td><input id="id_min_delivery_time" type="number" class="form-control" name='min_delivery_time'
+                                   value="{{ form.min_delivery_time.value }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_max_delivery_time">{{ form.max_delivery_time.label }}</label></td>
+                        <td><input id="id_max_delivery_time" type="number" class="form-control" name='max_delivery_time'
+                                   value="{{ form.max_delivery_time.value }}">
+                        </td>
+                    </tr>
+                </form>
+            </table>
+        </div>
+        <button class="btn btn-primary" type="submit" form="id_form"><i class="fa fa-save"></i> Сохранить</button>
+        {% if form.errors %}
+        <p class="font-danger">
+            Произошла ошибка
+        </p>
+        {{ form.errors }}
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

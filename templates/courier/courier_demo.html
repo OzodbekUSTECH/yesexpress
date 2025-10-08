@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+{#    <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>#}
+{#    <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet'/>#}
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=b94b1279-eb75-40e5-be0c-5578e33f9c9d&lang=ru_RU"
+            type="text/javascript">
+    </script>
+</head>
+<body>
+<div id='map' style='width: 400px; height: 300px;'></div>
+<script>
+
+    const websocket = new WebSocket('{{ websocket_url }}ws/courier-location/1/');
+
+    ymaps.ready(function () {
+        var map = new ymaps.Map('map', {
+            center: [50.5, 30.5], // Default coordinates (latitude, longitude)
+            zoom: 10
+        });
+
+        // Create a draggable placemark
+        const placemark = new ymaps.Placemark([50.5, 30.5], {}, {
+            draggable: true
+        });
+        map.geoObjects.add(placemark);
+
+        placemark.events.add('dragend', function () {
+            console.log('hi there')
+            const coords = placemark.geometry.getCoordinates();
+            const data = JSON.stringify({ longitude: coords[1], latitude: coords[0] });
+            console.log(data);
+            websocket.send(data);
+        });
+
+        websocket.addEventListener('message', function (event) {
+            const data = JSON.parse(event.data);
+            const lngLat = JSON.parse(data.text); // Assuming data.text contains {longitude, latitude}
+            placemark.geometry.setCoordinates([lngLat.latitude, lngLat.longitude]);
+        });
+
+        // websocket.onclose = function (event) {
+        //     console.log(event);
+        //     console.log('The connection has been closed successfully.');
+        // };
+    });
+
+</script>
+</body>
+</html>

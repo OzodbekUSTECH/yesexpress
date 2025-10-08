@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Категория продуктов {% endblock %}
+
+{% block content %}
+    <div id="updateCategory">
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script type="module" src="{% static 'assets/js/reactComponents/contentManager/categories/updateCategory.js' %}"></script>
+<script type="module" src="{% static 'assets/js/reactComponents/config.js' %}"></script>
+
+{% endblock %}

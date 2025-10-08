@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Редактировать дополнение
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h5>Редактировать</h5>
+        </div>
+        <div class="card-body">
+            <form action="" id="items" method="post">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="table table-l">
+                        {{ form.as_table }}
+                    </table>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-s">
+                        <thead>
+                        <tr>
+                            <td>Название (RU)</td>
+                            <td>Название (UZ)</td>
+                            <td>Название (EN)</td>
+                            <td>Цена</td>
+                            <td>Удалить</td>
+                        </tr>
+                        </thead>
+                        <tbody id="items_tbody">
+                        {% for form in formset %}
+                            <tr id="row_{{ forloop.counter0 }}">
+                                {{ form.id }}
+                                <td>{{ form.title_ru }}</td>
+                                <td>{{ form.title_uz }}</td>
+                                <td>{{ form.title_en }}</td>
+                                <td>{{ form.adding_price }}</td>
+                                <td>
+                                    <a class="btn btn-danger" onclick="deleteItem({{ forloop.counter0 }})"><i
+                                            class="fa fa-trash-o"></i></a>
+                                </td>
+                                <td hidden>
+                                    <div class="checkbox">
+                                        {{ form.DELETE }}
+                                        <label for="id_items-{{ forloop.counter0 }}-DELETE"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {{ formset.management_form }}
+
+                </div>
+            </form>
+            <a onclick="addElement()" class="btn btn-primary">Добавить</a>
+            <br>
+            <hr>
+            <button form="items" class="btn btn-primary">Сохранить</button>
+        </div>
+    </div>
+    <script>
+        function deleteItem(counter_id) {
+            const row = document.getElementById(`row_${counter_id}`)
+            row.setAttribute('hidden', 1)
+            const checkbox = document.getElementById(`id_items-${counter_id}-DELETE`)
+            checkbox.setAttribute('checked', 1)
+        }
+
+        function addElement() {
+            const total_forms = document.getElementById('id_items-TOTAL_FORMS')
+            const element_count = +total_forms.getAttribute('value')
+            const new_element_html = `<tr id="row_${element_count}">
+                                <input type="hidden" name="items-${element_count}-id" id="id_items-${element_count}-id" data-bs-original-title="" title="">
+                                <td><input type="text" name="items-${element_count}-title_ru" class="form-control" maxlength="255" id="id_items-${element_count}-title_ru" data-bs-original-title="" title=""></td>
+                                <td><input type="text" name="items-${element_count}-title_uz" class="form-control" maxlength="255" id="id_items-${element_count}-title_uz" data-bs-original-title="" title=""></td>
+                                <td><input type="text" name="items-${element_count}-title_en" class="form-control" maxlength="255" id="id_items-${element_count}-title_en" data-bs-original-title="" title=""></td>
+                                <td><input type="number" name="items-${element_count}-adding_price" class="form-control" id="id_items-${element_count}-adding_price" data-bs-original-title="" title=""></td>
+                                <td>
+                                    <a class="btn btn-danger" onclick="deleteItem(${element_count})" data-bs-original-title="" title=""><i class="fa fa-trash-o"></i></a>
+                                </td>
+                                <td hidden="">
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="items-${element_count}-DELETE" id="id_items-${element_count}-DELETE" data-bs-original-title="" title="">
+                                        <label for="id_items-${element_count}-DELETE"></label>
+                                    </div>
+                                </td>
+                            </tr>`
+            const table = document.getElementById('items_tbody')
+            const new_element = document.createElement('tr')
+            new_element.innerHTML = new_element_html
+            new_element.id = `row_${element_count}`
+            table.appendChild(new_element)
+            total_forms.setAttribute('value', element_count + 1)
+        }
+
+    </script>
+{% endblock %}
