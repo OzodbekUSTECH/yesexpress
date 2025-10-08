@@ -157,15 +157,15 @@ db.sqlite3
 request.json
 pyproject.toml
 
-#media
-media/
+# Ignore all contents of media except .gitkeep
+media/*
+!media/.gitkeep
+
 staticfiles/
 venv3.9/
 /media/
 .env.makefile
 tls.key
-static
-media
 staticfiles
 postgres-data
 redis-data
