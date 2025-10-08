@@ -49,6 +49,8 @@ services:
       - ./staticfiles:/app/staticfiles
       - ./logs:/app/logs
     command: ./entrypoint.sh
+    ports:
+      - "4546:4546"
     networks:
       - app-network
 
@@ -68,6 +70,8 @@ services:
       - ./staticfiles:/app/staticfiles
       - ./logs:/app/logs
     command: ./entrypoint_asgi.sh
+    ports:
+      - "4547:4547"
     networks:
       - app-network
 
