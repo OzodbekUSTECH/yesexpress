@@ -157,13 +157,12 @@ db.sqlite3
 request.json
 pyproject.toml
 
-# Ignore all contents of media except .gitkeep
-media/*
-!media/.gitkeep
+# Не игнорировать папку media, но игнорировать её содержимое кроме .gitkeep
+/media/*
+!/media/.gitkeep
 
 staticfiles/
 venv3.9/
-/media/
 .env.makefile
 tls.key
 staticfiles
