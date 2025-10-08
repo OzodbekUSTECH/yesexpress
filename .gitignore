@@ -169,9 +169,10 @@ media
 staticfiles
 postgres-data
 redis-data
-req.txt
-requirements.txt
 uv.lock
 *.sql
 docker-compose.yml
 Dockerfile
+
+firebase.json
+Get_sms.json
