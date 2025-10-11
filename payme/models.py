@@ -47,4 +47,6 @@ class PaymePayment(models.Model):
     confirm_response = models.JSONField(null=True, blank=True)
     cancel_request = models.JSONField(null=True, blank=True)
     cancel_response = models.JSONField(null=True, blank=True)
+    set_fiscal_data_request = models.JSONField(null=True, blank=True)
+    set_fiscal_data_response = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

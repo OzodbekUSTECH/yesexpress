@@ -3,6 +3,8 @@ from functools import cache
 import requests
 
 from payme.models import PaymePayment
+from payment.models import Payment
+from ofd.services import OFDReceiptService
 from tuktuk.settings import PAYME_SETTINGS, PAYME_TEST
 
 @cache
@@ -108,6 +110,39 @@ def make_payment(session, order, token, items: list[dict]):
         order.status = "accepted"
         order.receipt_id = receipt_id
         order.save()
+        
+        # Создаем Payment запись для Payme платежа
+        payment = Payment.objects.create(
+            payment_type="INCOME",
+            payment_method="payme",
+            order=order,
+            amount=order.total_sum,
+            receipt_required=True
+        )
+        
+        # Создаем OFD чек
+        try:
+            ofd_service = OFDReceiptService(payment)
+            ofd_receipt = ofd_service.create_sale_receipt()
+            
+            if ofd_receipt:
+                # Отправляем фискальные данные в Payme
+                fiscal_data = {
+                    "status_code": 0,
+                    "message": "accepted",
+                    "terminal_id": ofd_receipt.terminal_id,
+                    "receipt_id": ofd_receipt.receipt_seq,
+                    "date": ofd_receipt.receipt_date.strftime("%Y%m%d%H%M%S") if ofd_receipt.receipt_date else None,
+                    "fiscal_sign": ofd_receipt.fiscal_sign,
+                    "qr_code_url": ofd_receipt.qr_code_url
+                }
+                
+                set_fiscal_data(receipt_id, fiscal_data)
+                
+        except Exception as e:
+            print(f"Ошибка при создании OFD чека: {e}")
+            # Продолжаем выполнение даже если OFD чек не создался
+        
         # notify(order)
 
     return {'status': 'success'}
@@ -143,6 +178,39 @@ def cancel_payment(receipt_id):
         if 'result' in response_json:
             payment.status = response_json['result']['receipt']['state']
         payment.save()
+
+
+def set_fiscal_data(receipt_id, fiscal_data):
+    """
+    Передача фискального чека в Payme
+    
+    Args:
+        receipt_id (str): Уникальный id чека в БД Payme
+        fiscal_data (dict): Фискальные данные чека
+    """
+    payload = {
+        "id": 1,
+        "method": "receipts.set_fiscal_data",
+        "params": {
+            "id": receipt_id,
+            "fiscal_data": fiscal_data
+        }
+    }
+    
+    response = requests.post(
+        url=PAYME_SETTINGS["api_url"], 
+        data=json.dumps(payload), 
+        headers=_get_auth_header()
+    )
+    
+    response_json = response.json()
+    payment = PaymePayment.objects.filter(receipt_id=receipt_id).first()
+    if payment:
+        payment.set_fiscal_data_request = payload
+        payment.set_fiscal_data_response = response_json
+        payment.save()
+    
+    return response_json
 
 class PaymeApiClient:
     def __init__(self):
